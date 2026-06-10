@@ -24,9 +24,26 @@ namespace WebAppTemplate.Presentation.Validations
            .EmailAddress().WithMessage("Invalid email format.");
            //.MustAsync(BeUniqueEmail).WithMessage("Email is already registered.");
 
-            RuleFor(request => request.PhoneNumber)
+            RuleFor(request => request.Phone)
             .NotEmpty().WithMessage("Phone number is required.");
-            //.Matches(@"^\+\d{1,3}\d{9,12}$").WithMessage("Phone number must be in the format +<country_code><number>."); // Example: +12345678901
+            RuleFor(x => x.Password)
+               .NotEmpty()
+               .WithMessage("Password is required.")
+
+       .MinimumLength(8)
+       .WithMessage("Password must be at least 8 characters long.")
+
+       .Matches("[A-Z]")
+       .WithMessage("Password must contain at least one uppercase letter.")
+
+       .Matches("[a-z]")
+       .WithMessage("Password must contain at least one lowercase letter.")
+
+       .Matches("[0-9]")
+       .WithMessage("Password must contain at least one number.")
+
+       .Matches("[^a-zA-Z0-9]")
+       .WithMessage("Password must contain at least one special character.");
         }
 
         public async Task<bool> BeUniqueUsername(string username, CancellationToken cancellationToken)

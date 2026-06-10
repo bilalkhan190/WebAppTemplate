@@ -56,7 +56,7 @@ namespace WebAppTemplate.Application.Services.Implementation
             User userToCreate = _mapper.Map<User>(request);
             userToCreate.Password =
                 _passwordManager.HashPassword(request.Password);
-            userToCreate.SetCreatedDefaults(userToCreate.CreatedBy.Value);
+            userToCreate.SetCreatedDefaults(userToCreate.CreatedBy);
             await _unitOfWork.Users.AddAsync(userToCreate);
             await _unitOfWork.CompleteAsync();
 

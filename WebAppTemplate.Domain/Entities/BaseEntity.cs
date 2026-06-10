@@ -13,12 +13,12 @@ namespace WebAppTemplate.Domain.Entities
         public Guid? CreatedBy { get; set; }
         public Guid? DeletedBy { get; set; }
         public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
-        public DateTime DeletedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
+        public DateTime? DeletedAt { get; set; }
         public DeletionStatus Deleted { get; set; }
         public Status Active { get; set; }
 
-        public void SetCreatedDefaults(Guid createdBy)
+        public void SetCreatedDefaults(Guid? createdBy)
         {
             CreatedAt = DateTime.Now;
             CreatedBy = createdBy;

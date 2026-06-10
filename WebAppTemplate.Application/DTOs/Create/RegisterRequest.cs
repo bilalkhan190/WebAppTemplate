@@ -12,18 +12,24 @@ namespace WebAppTemplate.Application.DTOs
         public string Username { get; init; }
         public string Password { get; init; }
         public string Email { get; init; }
-        public string PhoneNumber { get; init; }
+        public string Phone { get; init; }
+        public Guid RoleGuid { get; init; }
+        public string FirstName { get; init; }
+        public string LastName { get; init; }
 
 
         public RegisterUserRequestDTO() { }
 
-        public RegisterUserRequestDTO(Guid id, string username, string password, string email, string phoneNumber)
+        public RegisterUserRequestDTO(Guid id, string username, string password, string email, string phoneNumber,Guid roleGuid , string firstName , string lastName)
         {
             Id = id;
             Username = username;
             Password = password;
             Email = email;
-            PhoneNumber = phoneNumber;
+            Phone = phoneNumber;
+            RoleGuid = roleGuid;
+            FirstName = firstName;
+            LastName = lastName;
         }
         
          

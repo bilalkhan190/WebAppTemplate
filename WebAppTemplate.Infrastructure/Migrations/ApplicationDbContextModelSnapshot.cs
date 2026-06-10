@@ -8,7 +8,7 @@ using WebAppTemplate.Infrastructure.Persistance.Data;
 
 #nullable disable
 
-namespace WebAppTemplate.Infrastructure.Persistence.Migrations
+namespace WebAppTemplate.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     partial class ApplicationDbContextModelSnapshot : ModelSnapshot
@@ -26,7 +26,8 @@ namespace WebAppTemplate.Infrastructure.Persistence.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWID()");
 
                     b.Property<int>("Active")
                         .HasColumnType("int");
@@ -40,7 +41,7 @@ namespace WebAppTemplate.Infrastructure.Persistence.Migrations
                     b.Property<int>("Deleted")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("DeletedAt")
+                    b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid?>("DeletedBy")
@@ -51,7 +52,7 @@ namespace WebAppTemplate.Infrastructure.Persistence.Migrations
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 
-                    b.Property<DateTime>("UpdatedAt")
+                    b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid?>("UpdatedBy")
@@ -80,7 +81,7 @@ namespace WebAppTemplate.Infrastructure.Persistence.Migrations
                     b.Property<int>("Deleted")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("DeletedAt")
+                    b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid?>("DeletedBy")
@@ -114,7 +115,7 @@ namespace WebAppTemplate.Infrastructure.Persistence.Migrations
                     b.Property<int>("Role")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("UpdatedAt")
+                    b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid?>("UpdatedBy")

@@ -18,7 +18,9 @@ namespace WebAppTemplate.Infrastructure.Persistance.Configurations
             builder.Property(x => x.RoleName)
                 .IsRequired()
                 .HasMaxLength(150);
-          
+            builder.Property(x => x.Id)
+       .HasDefaultValueSql("NEWID()");
+
             builder.HasMany<UserRoles>()
                 .WithOne(x => x.Roles)
                 .HasForeignKey(x => x.RoleId)

@@ -35,6 +35,8 @@ namespace WebAppTemplate.Presentation.Controllers
             return result.ToActionResult();
         }
 
+
+
         [HttpPost("Register")]
         public async Task<IActionResult> RegisterAsync(
                         [FromBody] RegisterUserRequestDTO request)

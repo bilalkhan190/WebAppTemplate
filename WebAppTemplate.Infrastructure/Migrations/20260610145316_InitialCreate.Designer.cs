@@ -9,11 +9,11 @@ using WebAppTemplate.Infrastructure.Persistance.Data;
 
 #nullable disable
 
-namespace WebAppTemplate.Infrastructure.Persistence.Migrations
+namespace WebAppTemplate.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241001141838_InitailCreate")]
-    partial class InitailCreate
+    [Migration("20260610145316_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -29,7 +29,8 @@ namespace WebAppTemplate.Infrastructure.Persistence.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWID()");
 
                     b.Property<int>("Active")
                         .HasColumnType("int");
@@ -37,16 +38,16 @@ namespace WebAppTemplate.Infrastructure.Persistence.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("CreatedBy")
+                    b.Property<Guid?>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Deleted")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("DeletedAt")
+                    b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("DeletedBy")
+                    b.Property<Guid?>("DeletedBy")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("RoleName")
@@ -54,10 +55,10 @@ namespace WebAppTemplate.Infrastructure.Persistence.Migrations
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 
-                    b.Property<DateTime>("UpdatedAt")
+                    b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("UpdatedBy")
+                    b.Property<Guid?>("UpdatedBy")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
@@ -77,16 +78,16 @@ namespace WebAppTemplate.Infrastructure.Persistence.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("CreatedBy")
+                    b.Property<Guid?>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Deleted")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("DeletedAt")
+                    b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("DeletedBy")
+                    b.Property<Guid?>("DeletedBy")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Email")
@@ -117,10 +118,10 @@ namespace WebAppTemplate.Infrastructure.Persistence.Migrations
                     b.Property<int>("Role")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("UpdatedAt")
+                    b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("UpdatedBy")
+                    b.Property<Guid?>("UpdatedBy")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Username")
