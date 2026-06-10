@@ -16,9 +16,13 @@ namespace WebAppTemplate.Infrastructure.Implementation
             return BCrypt.Net.BCrypt.HashPassword(password);
         }
 
-        public async Task<bool> VerifyPasswordAsync(string password, string hashPassword, CancellationToken cancellationToken)
+        public bool VerifyPassword(
+     string password,
+     string hashPassword)
         {
-           return await Task.Run(() => BCrypt.Net.BCrypt.Verify(password,hashPassword), cancellationToken);
+            return BCrypt.Net.BCrypt.Verify(
+                password,
+                hashPassword);
         }
     }
 }

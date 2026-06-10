@@ -12,5 +12,6 @@ namespace WebAppTemplate.Application.Services.Abstraction
     public interface IJwtTokenGenerator
     {
         string GenerateToken(User user);
+        string GenerateRefreshToken();
     }
 }

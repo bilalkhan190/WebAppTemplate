@@ -9,6 +9,6 @@ namespace WebAppTemplate.Application.Services.Abstraction
     public interface IPasswordManager
     {
         string HashPassword(string password);
-        Task<bool> VerifyPasswordAsync(string password, string hashPassword, CancellationToken cancellationToken);
+        bool VerifyPasswordAsync(string password, string hashPassword);
     }
 }

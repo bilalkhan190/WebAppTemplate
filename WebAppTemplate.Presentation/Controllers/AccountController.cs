@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using WebAppTemplate.Application.DTOs;
 using WebAppTemplate.Application.Extensions;
 using WebAppTemplate.Application.Services.Abstraction;
+using WebAppTemplate.Application.Services.Implementation;
 using WebAppTemplate.Domain.Entities;
 using WebAppTemplate.Presentation.Extensions;
 using static WebAppTemplate.Application.Extensions.ApiExtension;
@@ -19,18 +20,18 @@ namespace WebAppTemplate.Presentation.Controllers
     [Route("api/[controller]")]
     public class AccountController : ControllerBase
     {
-        private readonly IServiceUnitOfWork _serviceUnitOfWork;
+        private readonly IUserService _userService;
 
-        public AccountController(IServiceUnitOfWork serviceUnitOfWork)
+        public AccountController(IUserService userService)
         {
-            _serviceUnitOfWork = serviceUnitOfWork;
+            _userService = userService;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
             var result =
-                await _serviceUnitOfWork.User.GetAllUsersAsync();
+                await _userService.GetAllUsersAsync();
 
             return result.ToActionResult();
         }
@@ -47,7 +48,7 @@ namespace WebAppTemplate.Presentation.Controllers
             }
 
             var result =
-                await _serviceUnitOfWork.User.RegisterUserAsync(request);
+                await _userService.RegisterUserAsync(request);
 
             return result.ToActionResult<User>();
         }
