@@ -15,20 +15,6 @@ namespace WebAppTemplate.Infrastructure.Implementation
         public UserRepository(ApplicationDbContext context) : base(context) { }
        
 
-        public async Task<User> FindByIdAsync(int id)
-        {
-            return await FindAsync(id);
-        }
-
-        public async Task<IEnumerable<User>> GetAllUsers()
-        {
-            return await GetAllAsync(x => x.Active == Status.Active);
-        }
-
-        public async Task<User> RegisterAsync(User user)
-        {
-            await AddAsync(user);
-            return user;
-        }
+        
     }
 }

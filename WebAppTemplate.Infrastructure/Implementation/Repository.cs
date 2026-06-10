@@ -12,10 +12,11 @@ using WebAppTemplate.Infrastructure.Persistance.Data;
 
 namespace WebAppTemplate.Infrastructure.Implementation
 {
-    public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
+    public class Repository<TEntity> : IRepository<TEntity>
+     where TEntity : class
     {
-        private readonly ApplicationDbContext _context;
-        private readonly DbSet<TEntity> _dbSet;
+        protected readonly ApplicationDbContext _context;
+        protected readonly DbSet<TEntity> _dbSet;
 
         public Repository(ApplicationDbContext context)
         {
@@ -23,163 +24,63 @@ namespace WebAppTemplate.Infrastructure.Implementation
             _dbSet = context.Set<TEntity>();
         }
 
+        public IQueryable<TEntity> Query()
+        {
+            return _dbSet;
+        }
+
+        public async Task<TEntity?> GetByIdAsync(int id)
+        {
+            return await _dbSet.FindAsync(id);
+        }
+
+        public async Task<bool> AnyAsync(
+            Expression<Func<TEntity, bool>> predicate)
+        {
+            return await _dbSet.AnyAsync(predicate);
+        }
+
+        public async Task<int> CountAsync(
+            Expression<Func<TEntity, bool>>? predicate = null)
+        {
+            return predicate == null
+                ? await _dbSet.CountAsync()
+                : await _dbSet.CountAsync(predicate);
+        }
+
         public async Task AddAsync(TEntity entity)
         {
             await _dbSet.AddAsync(entity);
         }
 
-        public async Task AddRangeAsync(IEnumerable<TEntity> entities)
+        public async Task AddRangeAsync(
+            IEnumerable<TEntity> entities)
         {
-           await _dbSet.AddRangeAsync(entities);
-        }
-
-        public async Task<bool> AnyAsync(Expression<Func<TEntity, bool>> predicate)
-        {
-           return await _dbSet.AnyAsync(predicate);
-        }
-
-        public async Task<int> CountAsync()
-        {
-           return await _dbSet.CountAsync();
-        }
-
-        public async Task DeleteAsync(int id)
-        {
-           var record = await _dbSet.FindAsync(id);
-            if (record is not null)
-            {
-                 _dbSet.Remove(record);
-            }
-        }
-
-        public async Task<int> ExecuteRawSqlAsync(string sql, params object[] parameters)
-        {
-            return await _context.Database.ExecuteSqlRawAsync(sql,parameters);
-        }
-
-        /// <summary>
-        /// you can use findall method for getting filtered record as an list directly
-        /// </summary>
-        /// <param name="predicate"></param>
-        /// <returns></returns>
-        public async Task<IEnumerable<TEntity>> FindAllAsync(Expression<Func<TEntity, bool>> predicate)
-        {
-            return await _dbSet.Where(predicate).ToListAsync();    
-        }
-
-        public async Task<TEntity> FindAsync(object id)
-        {
-            return await _dbSet.FindAsync(id);
-        }
-
-        public TEntity FirstOrDefault(Expression<Func<TEntity, bool>> predicate)
-        {
-            return  _dbSet.FirstOrDefault(predicate);
-        }
-
-        public async Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate)
-        {
-           return await _dbSet.FirstOrDefaultAsync(predicate);
-        }
-
-        public IQueryable<TEntity> GetAll(Expression<Func<TEntity, bool>> predicate = null)
-        {
-            return _dbSet.Where(predicate);
-        }
-
-        /// <summary>
-        /// returns Ienumrable record with entity eager loaded
-        /// </summary>
-        /// <param name="include"></param>
-        /// <returns></returns>
-        public async Task<IEnumerable<TEntity>> GetAllAsync(Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null)
-        {
-            IQueryable<TEntity> query = _context.Set<TEntity>();
-
-            // Apply include expressions if provided
-            if (include != null)
-            {
-                query = include(query);
-            }
-
-            return await query.ToListAsync();
-        }
-
-        public async Task<IQueryable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate = null)
-        {
-            IQueryable<TEntity> query = _context.Set<TEntity>();
-
-            if (predicate != null)
-            {
-                query = query.Where(predicate);
-            }
-
-            return await Task.FromResult(query);
-        }
-
-        public Task<IEnumerable<TEntity>> GetAllWithIncludesAsync(Expression<Func<TEntity, bool>> predicate = null, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<IEnumerable<TEntity>> GetAllWithoutTrackingAsync(Expression<Func<TEntity, bool>> predicate = null)
-        {
-            return await _dbSet.AsNoTracking().Where(predicate).ToListAsync();
-        }
-
-        public Task<IEnumerable<TEntity>> GetAllWithoutTrackingAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<TEntity> GetByIdAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<PaginatedList<TEntity>> GetPagedAsync(int pageIndex, int pageSize, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<TEntity> GetWithIncludesAsync(Expression<Func<TEntity, bool>> predicate, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<TEntity> GetWithoutTrackingAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<TEntity> GetWithTrackingAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<TEntity> LastOrDefaultAsync(Expression<Func<TEntity, bool>> predicate)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<decimal> MaxAsync(Expression<Func<TEntity, decimal>> selector)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task RemoveRangeAsync(IEnumerable<TEntity> entities)
-        {
-            throw new NotImplementedException();
+            await _dbSet.AddRangeAsync(entities);
         }
 
         public void Update(TEntity entity)
         {
-            throw new NotImplementedException();
+            _dbSet.Update(entity);
         }
 
-        public Task UpdateRangeAsync(IEnumerable<TEntity> entities)
+        public void Remove(TEntity entity)
         {
-            throw new NotImplementedException();
+            _dbSet.Remove(entity);
+        }
+
+        public void RemoveRange(
+            IEnumerable<TEntity> entities)
+        {
+            _dbSet.RemoveRange(entities);
+        }
+
+        public async Task<int> ExecuteRawSqlAsync(
+            string sql,
+            params object[] parameters)
+        {
+            return await _context.Database
+                .ExecuteSqlRawAsync(sql, parameters);
         }
     }
 }

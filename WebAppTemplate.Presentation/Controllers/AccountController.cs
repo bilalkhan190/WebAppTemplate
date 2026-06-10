@@ -10,7 +10,7 @@ using WebAppTemplate.Application.DTOs;
 using WebAppTemplate.Application.Extensions;
 using WebAppTemplate.Application.Services.Abstraction;
 using WebAppTemplate.Domain.Entities;
-
+using WebAppTemplate.Presentation.Extensions;
 using static WebAppTemplate.Application.Extensions.ApiExtension;
 
 namespace WebAppTemplate.Presentation.Controllers
@@ -27,37 +27,28 @@ namespace WebAppTemplate.Presentation.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Login()
+        public async Task<IActionResult> GetAll()
         {
-           var users = await _serviceUnitOfWork.User.GetAllUsersAsync();
+            var result =
+                await _serviceUnitOfWork.User.GetAllUsersAsync();
 
-            if (users is null)
-            {
-                return Failure("avc",default);
-            }
-           
-            return Success(users);
+            return result.ToActionResult();
         }
 
         [HttpPost("Register")]
-        public async Task<IActionResult> RegisterAsync ([FromBody]RegisterUserRequestDTO request)
+        public async Task<IActionResult> RegisterAsync(
+                        [FromBody] RegisterUserRequestDTO request)
         {
             if (!ModelState.IsValid)
             {
-                return InternalServerError("Validation Errors", ModelState);
+                return BadRequest(ModelState);
             }
 
-            var user = await _serviceUnitOfWork.User.RegisterUserAsync(request);
+            var result =
+                await _serviceUnitOfWork.User.RegisterUserAsync(request);
 
-            if (user is null)
-            {
-                return Failure("Unable to register user", default);
-            }
-            //shoot an notification
-            return Success(user,"user created successfull");
-         
+            return result.ToActionResult<User>();
         }
 
-      
     }
 }

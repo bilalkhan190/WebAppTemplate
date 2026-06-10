@@ -9,8 +9,5 @@ namespace WebAppTemplate.Domain.Abstraction
 {
     public interface IUserRepository : IRepository<User>
     {
-        Task<User> FindByIdAsync(int id);
-        Task<IEnumerable<User>> GetAllUsers();
-        Task<User> RegisterAsync(User user);
     }
 }

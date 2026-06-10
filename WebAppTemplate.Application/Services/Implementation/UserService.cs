@@ -1,13 +1,17 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WebAppTemplate.Application.Common.Results;
 using WebAppTemplate.Application.DTOs;
 using WebAppTemplate.Application.Services.Abstraction;
 using WebAppTemplate.Domain.Abstraction;
 using WebAppTemplate.Domain.Entities;
+using WebAppTemplate.Domain.Enums;
+using WebAppTemplate.Domain.Shared.Enums;
 
 namespace WebAppTemplate.Application.Services.Implementation
 {
@@ -25,21 +29,38 @@ namespace WebAppTemplate.Application.Services.Implementation
             _passwordManager = passwordManager;
         }
 
-        public async Task<IEnumerable<User>> GetAllUsersAsync()
+        public async Task<ServiceResult<IEnumerable<User>>> GetAllUsersAsync()
         {
-            return await _unitOfWork.Users.GetAllUsers();
+                    var list = await _unitOfWork.Users
+                            .Query()
+                            .Where(x => x.Active == Status.Active)
+                            .ToListAsync();
+
+           return ServiceResult<IEnumerable<User>>.FromSuccess(list);
         }
 
 
-       
-        public async Task<User> RegisterUserAsync(RegisterUserRequestDTO Request)
+
+        public async Task<ServiceResult<User>> RegisterUserAsync(RegisterUserRequestDTO request)
         {
-            var userToCreate = _mapper.Map<User>(Request);
-            userToCreate.Password = _passwordManager.HashPassword(Request.Password);
-            userToCreate.SetCreatedDefaults(userToCreate.CreatedBy.Value); 
-            var result = await _unitOfWork.Users.RegisterAsync(userToCreate);
+            var existingUser =
+                await _unitOfWork.Users.Query()
+                .FirstOrDefaultAsync(x => x.Email == request.Email);
+
+            if (existingUser is not null)
+            {
+                return ServiceResult<User>.FromFailure(
+                    ["Email already exists"],
+                    ErrorType.Conflict);
+            }
+            User userToCreate = _mapper.Map<User>(request);
+            userToCreate.Password =
+                _passwordManager.HashPassword(request.Password);
+            userToCreate.SetCreatedDefaults(userToCreate.CreatedBy.Value);
+            await _unitOfWork.Users.AddAsync(userToCreate);
             await _unitOfWork.CompleteAsync();
-            return result;
+
+            return ServiceResult<User>.FromSuccess(userToCreate);
         }
     }
 }
