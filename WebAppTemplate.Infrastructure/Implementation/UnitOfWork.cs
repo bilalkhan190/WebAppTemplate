@@ -2,10 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 using WebAppTemplate.Domain.Abstraction;
 using WebAppTemplate.Domain.Entities;
+using WebAppTemplate.Infrastructure.Implementation.Repositories;
 using WebAppTemplate.Infrastructure.Persistance.Data;
 
 namespace WebAppTemplate.Infrastructure.Implementation
@@ -16,6 +18,7 @@ namespace WebAppTemplate.Infrastructure.Implementation
         private IDbContextTransaction _transaction;
         private IUserRepository? _users;
         private ITokenRepository _refreshToken;
+        private IUserRoleRepository _userRole;
 
         public UnitOfWork(ApplicationDbContext context)
         {
@@ -69,5 +72,9 @@ namespace WebAppTemplate.Infrastructure.Implementation
 
         public ITokenRepository RefreshToken
             => _refreshToken ??= new TokenRepository(_dbcontext);
+
+        public IUserRoleRepository UserRoles 
+            => _userRole ??= new UserRoleRepository(_dbcontext);
+
     }
 }

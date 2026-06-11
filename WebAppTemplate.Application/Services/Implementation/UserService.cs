@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WebAppTemplate.Application.Common.Results;
 using WebAppTemplate.Application.DTOs;
+using WebAppTemplate.Application.DTOs.Create;
 using WebAppTemplate.Application.Services.Abstraction;
 using WebAppTemplate.Domain.Abstraction;
 using WebAppTemplate.Domain.Entities;
@@ -18,15 +19,33 @@ namespace WebAppTemplate.Application.Services.Implementation
     public class UserService : IUserService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IUserRoleRepository _userRoleRepo;
         private readonly IMapper _mapper;
         private IPasswordManager _passwordManager;
+
+
         public UserService(IUnitOfWork unitOfWork,
                             IMapper mapper,
-                            IPasswordManager passwordManager)
+                            IPasswordManager passwordManager,
+                            ICurrentUserService currentUserService,
+                            IUserRoleRepository userRoleRepo)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _passwordManager = passwordManager;
+            _userRoleRepo = userRoleRepo;
+        }
+
+        public async Task<ServiceResult<UserRoles>> AssignUserRole(CreateRoleAssignment request)
+        {
+            var userRole = new UserRoles
+            {
+                RoleId = request.RoleId,
+                UserId = request.UserId
+            };
+            await _unitOfWork.UserRoles.AddAsync(userRole);
+            await _unitOfWork.CompleteAsync();
+            return ServiceResult<UserRoles>.FromSuccess(userRole);
         }
 
         public async Task<ServiceResult<IEnumerable<User>>> GetAllUsersAsync()
@@ -56,7 +75,6 @@ namespace WebAppTemplate.Application.Services.Implementation
             User userToCreate = _mapper.Map<User>(request);
             userToCreate.Password =
                 _passwordManager.HashPassword(request.Password);
-            userToCreate.SetCreatedDefaults(userToCreate.CreatedBy);
             await _unitOfWork.Users.AddAsync(userToCreate);
             await _unitOfWork.CompleteAsync();
 

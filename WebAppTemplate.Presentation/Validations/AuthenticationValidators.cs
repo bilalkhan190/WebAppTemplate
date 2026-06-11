@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WebAppTemplate.Application.DTOs.Account;
+using WebAppTemplate.Domain.Entities;
 
 namespace WebAppTemplate.Presentation.Validations
 {
@@ -17,6 +18,20 @@ namespace WebAppTemplate.Presentation.Validations
             .WithMessage("Refresh token is required.")
             .MaximumLength(500)
             .WithMessage("Refresh token exceeds maximum length.");
+
+        }
+    }
+
+    public class AssignmentRoleToUser : AbstractValidator<UserRoles>
+    {
+        public AssignmentRoleToUser()
+        {
+            RuleFor(x => x.UserId)
+                .NotEmpty()
+                .WithMessage("Userid is required.");
+            RuleFor(x => x.RoleId)
+                .NotEmpty()
+                .WithMessage("Roleid is required.");
 
         }
     }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WebAppTemplate.Domain.Entities
 {
-    public class UserRoles
+    public class UserRoles : BaseEntity
     {
         public Guid Id { get; set; } = Guid.NewGuid();
         public Guid UserId { get; set; } 

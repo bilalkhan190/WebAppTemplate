@@ -17,6 +17,7 @@ namespace WebAppTemplate.Application
             services.AddAutoMapper(typeof(MapperConfig));
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAuthService, AuthService>();
+           
           
            
           

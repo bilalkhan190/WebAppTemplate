@@ -8,7 +8,7 @@ using WebAppTemplate.Domain.Entities;
 using WebAppTemplate.Domain.Shared.Enums;
 using WebAppTemplate.Infrastructure.Persistance.Data;
 
-namespace WebAppTemplate.Infrastructure.Implementation
+namespace WebAppTemplate.Infrastructure.Implementation.Repositories
 {
     public class UserRepository : Repository<User>, IUserRepository
     {

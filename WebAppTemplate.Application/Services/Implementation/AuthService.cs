@@ -21,12 +21,14 @@ namespace WebAppTemplate.Application.Services.Implementation
         private readonly IUnitOfWork _unitOfWork;
         private readonly IPasswordManager _passwordManager;
         private readonly IJwtTokenGenerator _tokenGenerator;
+        private readonly ICurrentUserService _currentUserService;
 
-        public AuthService(IUnitOfWork unitOfWork, IPasswordManager passwordManager, IJwtTokenGenerator tokenGenerator)
+        public AuthService(IUnitOfWork unitOfWork, IPasswordManager passwordManager, IJwtTokenGenerator tokenGenerator, ICurrentUserService currentUserService)
         {
             _unitOfWork = unitOfWork;
             _passwordManager = passwordManager;
             _tokenGenerator = tokenGenerator;
+            _currentUserService = currentUserService;
         }
 
 

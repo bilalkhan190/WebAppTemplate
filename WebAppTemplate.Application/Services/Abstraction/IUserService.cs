@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WebAppTemplate.Application.Common.Results;
 using WebAppTemplate.Application.DTOs;
+using WebAppTemplate.Application.DTOs.Create;
 using WebAppTemplate.Domain.Entities;
 
 namespace WebAppTemplate.Application.Services.Abstraction
@@ -13,5 +14,6 @@ namespace WebAppTemplate.Application.Services.Abstraction
     {
         Task<ServiceResult<IEnumerable<User>>> GetAllUsersAsync();
          Task<ServiceResult<User>> RegisterUserAsync(RegisterUserRequestDTO request);
+        Task<ServiceResult<UserRoles>> AssignUserRole(CreateRoleAssignment request);
     }
 }

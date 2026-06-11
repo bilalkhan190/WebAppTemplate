@@ -17,5 +17,6 @@ namespace WebAppTemplate.Domain.Abstraction
         Task RollbackTransactionAsync();
         IUserRepository Users { get; }
         ITokenRepository RefreshToken { get; }
+        IUserRoleRepository UserRoles { get; }
     }
 }
