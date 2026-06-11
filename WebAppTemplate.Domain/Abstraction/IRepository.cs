@@ -14,7 +14,7 @@ namespace WebAppTemplate.Domain.Abstraction
     {
         IQueryable<TEntity> Query();
 
-        Task<TEntity?> GetByIdAsync(int id);
+        Task<TEntity?> GetByIdAsync(Guid id);
 
         Task<bool> AnyAsync(
             Expression<Func<TEntity, bool>> predicate);

@@ -22,8 +22,8 @@ namespace WebAppTemplate.Domain.Entities
 
         public AppRoles Role { get; set; }
 
-        public virtual ICollection<UserRoles> UserRoles { get; set; }
-
+        public virtual ICollection<UserRoles> UserRoles { get; set; } = new List<UserRoles>();
+        public virtual ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
 
     }
 }

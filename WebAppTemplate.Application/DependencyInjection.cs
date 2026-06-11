@@ -15,8 +15,11 @@ namespace WebAppTemplate.Application
         public static IServiceCollection AddApplicationLayer(this IServiceCollection services)
         {
             services.AddAutoMapper(typeof(MapperConfig));
-            services.AddScoped<IUserService,UserService> ();
-            services.AddScoped<IServiceUnitOfWork,ServiceUnitOfWork> ();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IAuthService, AuthService>();
+          
+           
+          
             return services;
         }
     }

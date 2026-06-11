@@ -14,6 +14,8 @@ using WebAppTemplate.Domain.Shared.Constants;
 using WebAppTemplate.Infrastructure.Authentication.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using WebAppTemplate.Application.Services.Abstraction;
+using WebAppTemplate.Infrastructure.Authentication;
 
 namespace WebAppTemplate.Infrastructure
 {
@@ -51,6 +53,8 @@ namespace WebAppTemplate.Infrastructure
             });
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<ITokenRepository, TokenRepository>();
+            services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
             return services;
         }
     }

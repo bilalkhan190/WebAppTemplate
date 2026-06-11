@@ -29,7 +29,7 @@ namespace WebAppTemplate.Infrastructure.Implementation
             return _dbSet;
         }
 
-        public async Task<TEntity?> GetByIdAsync(int id)
+        public async Task<TEntity?> GetByIdAsync(Guid id)
         {
             return await _dbSet.FindAsync(id);
         }

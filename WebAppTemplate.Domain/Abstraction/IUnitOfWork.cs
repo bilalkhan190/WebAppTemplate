@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WebAppTemplate.Domain.Entities;
 
 namespace WebAppTemplate.Domain.Abstraction
 {
@@ -15,5 +16,6 @@ namespace WebAppTemplate.Domain.Abstraction
         Task CommitTransactionAsync();
         Task RollbackTransactionAsync();
         IUserRepository Users { get; }
+        ITokenRepository RefreshToken { get; }
     }
 }

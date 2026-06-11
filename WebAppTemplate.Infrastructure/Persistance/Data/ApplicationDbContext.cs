@@ -22,11 +22,13 @@ namespace WebAppTemplate.Infrastructure.Persistance.Data
             modelBuilder.ApplyConfiguration(new UserEntityConfiguration());
             modelBuilder.ApplyConfiguration(new RoleEntityConfiguration());
             modelBuilder.ApplyConfiguration(new UserRoleEntityConfiguration());
+            modelBuilder.ApplyConfiguration(new RefreshTokenEntityConfiguration());
         }
 
         public virtual DbSet<User> Users { get; set; }  
         public virtual DbSet<Role> Roles { get; set; }  
         public virtual DbSet<UserRoles> UserRoles { get; set; }  
+        public virtual DbSet<RefreshToken> RefreshTokens { get; set; }  
 
 
 

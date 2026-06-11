@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WebAppTemplate.Application.DTOs;
+using WebAppTemplate.Application.DTOs.Account;
 using WebAppTemplate.Application.Extensions;
 using WebAppTemplate.Application.Services.Abstraction;
 using WebAppTemplate.Application.Services.Implementation;
@@ -21,10 +22,12 @@ namespace WebAppTemplate.Presentation.Controllers
     public class AccountController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly IAuthService _authService;
 
-        public AccountController(IUserService userService)
+        public AccountController(IUserService userService, IAuthService authService)
         {
             _userService = userService;
+            _authService = authService;
         }
 
         [HttpGet]
@@ -38,7 +41,7 @@ namespace WebAppTemplate.Presentation.Controllers
 
 
 
-        [HttpPost("Register")]
+        [HttpPost("register")]
         public async Task<IActionResult> RegisterAsync(
                         [FromBody] RegisterUserRequestDTO request)
         {
@@ -52,6 +55,20 @@ namespace WebAppTemplate.Presentation.Controllers
 
             return result.ToActionResult<User>();
         }
+
+        [HttpPost("sign-in")]
+        public async Task<IActionResult> SignIn(LoginRequst request) 
+        {
+            var result = await _authService.SignInAsync(request);
+            return result.ToActionResult<LoginResponse>();
+         }
+
+        [HttpPost("refresh-token")]
+        public async Task<IActionResult> RefreshToken(RefreshTokenRequest request) {
+            var result = await _authService.GetNewRefreshToken(request);
+            return result.ToActionResult<LoginResponse>();
+        } 
+
 
     }
 }

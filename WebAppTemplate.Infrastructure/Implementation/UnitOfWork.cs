@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WebAppTemplate.Domain.Abstraction;
+using WebAppTemplate.Domain.Entities;
 using WebAppTemplate.Infrastructure.Persistance.Data;
 
 namespace WebAppTemplate.Infrastructure.Implementation
@@ -13,14 +14,15 @@ namespace WebAppTemplate.Infrastructure.Implementation
     {
         private readonly ApplicationDbContext _dbcontext;
         private IDbContextTransaction _transaction;
-
+        private IUserRepository? _users;
+        private ITokenRepository _refreshToken;
 
         public UnitOfWork(ApplicationDbContext context)
         {
-            _dbcontext = context;   
+            _dbcontext = context;
         }
 
-        public async Task BeginTransactionAsync() => await _dbcontext.Database.BeginTransactionAsync();
+        public async Task BeginTransactionAsync() => _transaction = await _dbcontext.Database.BeginTransactionAsync();
 
         public async Task CommitTransactionAsync()
         {
@@ -28,7 +30,7 @@ namespace WebAppTemplate.Infrastructure.Implementation
             {
                 await CompleteAsync();
                 await _transaction.CommitAsync();
-               
+
             }
             catch (Exception)
             {
@@ -42,10 +44,10 @@ namespace WebAppTemplate.Infrastructure.Implementation
             }
         }
 
-        public int Complete() =>  _dbcontext.SaveChanges();
-       
+        public int Complete() => _dbcontext.SaveChanges();
+
         public async Task<int> CompleteAsync() => await _dbcontext.SaveChangesAsync();
-       
+
 
         public async Task RollbackTransactionAsync()
         {
@@ -62,6 +64,10 @@ namespace WebAppTemplate.Infrastructure.Implementation
             _dbcontext.Dispose();
         }
 
-        public IUserRepository Users => new UserRepository(_dbcontext);
+        public IUserRepository Users
+     => _users ??= new UserRepository(_dbcontext);
+
+        public ITokenRepository RefreshToken
+            => _refreshToken ??= new TokenRepository(_dbcontext);
     }
 }
