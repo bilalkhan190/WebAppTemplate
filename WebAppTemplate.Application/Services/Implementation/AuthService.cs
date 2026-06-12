@@ -65,6 +65,8 @@ namespace WebAppTemplate.Application.Services.Implementation
         {
            var user =  await _unitOfWork.Users
                                     .Query()
+                                    .Include(x => x.UserRoles)
+                                    .ThenInclude(x => x.Roles)
                                     .FirstOrDefaultAsync(x => x.Username == request.Username);
             if (user is null)
             {

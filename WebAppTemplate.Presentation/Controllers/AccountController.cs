@@ -30,7 +30,7 @@ namespace WebAppTemplate.Presentation.Controllers
             _authService = authService;
         }
 
-        [HttpGet]
+        [HttpGet("get-user")]
         public async Task<IActionResult> GetAll()
         {
             var result =
@@ -61,7 +61,7 @@ namespace WebAppTemplate.Presentation.Controllers
         {
             var result = await _authService.SignInAsync(request);
             return result.ToActionResult<LoginResponse>();
-         }
+        }
 
         [HttpPost("refresh-token")]
         public async Task<IActionResult> RefreshToken(RefreshTokenRequest request) {

@@ -15,5 +15,6 @@ namespace WebAppTemplate.Application.Services.Abstraction
         Task<ServiceResult<IEnumerable<User>>> GetAllUsersAsync();
          Task<ServiceResult<User>> RegisterUserAsync(RegisterUserRequestDTO request);
         Task<ServiceResult<UserRoles>> AssignUserRole(CreateRoleAssignment request);
+        Task<ServiceResult<Role>> CreateRoleAsync(CreateRole role);
     }
 }

@@ -19,6 +19,7 @@ namespace WebAppTemplate.Infrastructure.Implementation
         private IUserRepository? _users;
         private ITokenRepository _refreshToken;
         private IUserRoleRepository _userRole;
+        private IRepository<Role> _roles;
 
         public UnitOfWork(ApplicationDbContext context)
         {
@@ -75,6 +76,9 @@ namespace WebAppTemplate.Infrastructure.Implementation
 
         public IUserRoleRepository UserRoles 
             => _userRole ??= new UserRoleRepository(_dbcontext);
+
+        public IRepository<Role> Roles
+            => _roles ??= new Repository<Role>(_dbcontext);
 
     }
 }

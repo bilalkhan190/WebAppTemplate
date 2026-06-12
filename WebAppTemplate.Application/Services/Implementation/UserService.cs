@@ -27,8 +27,8 @@ namespace WebAppTemplate.Application.Services.Implementation
         public UserService(IUnitOfWork unitOfWork,
                             IMapper mapper,
                             IPasswordManager passwordManager,
-                            ICurrentUserService currentUserService,
-                            IUserRoleRepository userRoleRepo)
+                            ICurrentUserService currentUserService
+                            )
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -48,6 +48,14 @@ namespace WebAppTemplate.Application.Services.Implementation
             return ServiceResult<UserRoles>.FromSuccess(userRole);
         }
 
+        public async Task<ServiceResult<Role>> CreateRoleAsync(CreateRole role)
+        {
+            var create = _mapper.Map<Role>(role);
+           await _unitOfWork.Roles.AddAsync(create);
+           await _unitOfWork.CompleteAsync();
+            return ServiceResult<Role>.FromSuccess(create);
+        }
+
         public async Task<ServiceResult<IEnumerable<User>>> GetAllUsersAsync()
         {
                     var list = await _unitOfWork.Users
@@ -58,14 +66,12 @@ namespace WebAppTemplate.Application.Services.Implementation
            return ServiceResult<IEnumerable<User>>.FromSuccess(list);
         }
 
-
-
         public async Task<ServiceResult<User>> RegisterUserAsync(RegisterUserRequestDTO request)
         {
             var existingUser =
                 await _unitOfWork.Users.Query()
                 .FirstOrDefaultAsync(x => x.Email == request.Email);
-
+              
             if (existingUser is not null)
             {
                 return ServiceResult<User>.FromFailure(

@@ -31,5 +31,20 @@ namespace WebAppTemplate.Presentation.Controllers
             var result = await _userService.AssignUserRole(request);
             return result.ToActionResult<UserRoles>();
         }
+
+        [HttpPost("create-role")]
+        public async Task<IActionResult> createRole(CreateRole request)
+        {
+            var result = await _userService.CreateRoleAsync(request);
+            return result.ToActionResult<Role>();
+        }
+
+        [HttpGet("users")]
+        [Authorize(Roles = "Administrator")]
+        public async Task<IActionResult> GetUsers()
+        {
+            var result = await _userService.GetAllUsersAsync();
+            return result.ToActionResult<IEnumerable<User>>();
+        }
     }
 }

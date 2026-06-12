@@ -10,4 +10,7 @@ namespace WebAppTemplate.Application.DTOs.Create
        Guid RoleId,
        Guid UserId
              );
+
+
+    public sealed record CreateRole(string RoleName);
 }
