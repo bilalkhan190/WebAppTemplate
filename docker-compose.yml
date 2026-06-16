@@ -1,0 +1,26 @@
+services:
+
+  api:
+    build:
+      context: .
+      dockerfile: WebAppTemplate.API/Dockerfile
+
+    ports:
+      - "5000:8080"
+
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__myConn: "Server=sqlserver,1433;Database=TestTemplateDb;User Id=sa;Password=Matech321@;TrustServerCertificate=True;"
+
+    depends_on:
+      - sqlserver
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "Matech321@"
+
+    ports:
+      - "1433:1433"
