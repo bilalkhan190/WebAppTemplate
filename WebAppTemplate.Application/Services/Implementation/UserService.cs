@@ -27,7 +27,8 @@ namespace WebAppTemplate.Application.Services.Implementation
         public UserService(IUnitOfWork unitOfWork,
                             IMapper mapper,
                             IPasswordManager passwordManager,
-                            ICurrentUserService currentUserService
+                            ICurrentUserService currentUserService,
+                            IUserRoleRepository userRoleRepo
                             )
         {
             _unitOfWork = unitOfWork;

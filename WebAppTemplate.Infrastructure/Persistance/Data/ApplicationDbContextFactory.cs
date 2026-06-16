@@ -1,12 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 using WebAppTemplate.Domain.Shared.Constants;
 
 namespace WebAppTemplate.Infrastructure.Persistance.Data
@@ -16,9 +12,24 @@ namespace WebAppTemplate.Infrastructure.Persistance.Data
     {
         public ApplicationDbContext CreateDbContext(string[] args)
         {
+            var currentDir = Directory.GetCurrentDirectory();
+
+            
+            var apiDirCandidate = Path.Combine(currentDir, "WebAppTemplate.API");
+            var basePath =
+                File.Exists(Path.Combine(currentDir, "appsettings.json")) ? currentDir :
+                Directory.Exists(apiDirCandidate) && File.Exists(Path.Combine(apiDirCandidate, "appsettings.json")) ? apiDirCandidate :
+                currentDir;
+
+            var environment =
+                Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")
+                ?? "Development";
+
             IConfiguration configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json")
+                .SetBasePath(basePath)
+                .AddJsonFile("appsettings.json", optional: false)
+                .AddJsonFile($"appsettings.{environment}.json", optional: true)
+                .AddEnvironmentVariables()
                 .Build();
 
             var optionsBuilder =
