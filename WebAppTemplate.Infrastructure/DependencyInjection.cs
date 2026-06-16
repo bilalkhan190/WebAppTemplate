@@ -19,6 +19,7 @@ using WebAppTemplate.Infrastructure.Implementation;
 using WebAppTemplate.Infrastructure.Implementation.Repositories;
 using WebAppTemplate.Infrastructure.Implementation.Services;
 using WebAppTemplate.Infrastructure.Persistance.Data;
+using WebAppTemplate.Infrastructure.Seeding;
 
 namespace WebAppTemplate.Infrastructure
 {
@@ -52,7 +53,12 @@ namespace WebAppTemplate.Infrastructure
             });
             services.AddDbContext<ApplicationDbContext>(options =>
             {
-                options.UseSqlServer(configuration.GetConnectionString(ConnectionNames.Local));
+                options.UseSqlServer(
+                    configuration.GetConnectionString(ConnectionNames.Local),
+                    sqlOptions => sqlOptions.EnableRetryOnFailure(
+                        maxRetryCount: 10,
+                        maxRetryDelay: TimeSpan.FromSeconds(10),
+                        errorNumbersToAdd: null));
             });
             services.AddHttpContextAccessor();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -61,6 +67,7 @@ namespace WebAppTemplate.Infrastructure
             services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
             services.AddScoped<ICurrentUserService, CurrentUserService>();
             services.AddScoped<IUserRoleRepository, UserRoleRepository>();
+            services.AddScoped<IDataSeeder, DataSeeder>();
             return services;
         }
     }

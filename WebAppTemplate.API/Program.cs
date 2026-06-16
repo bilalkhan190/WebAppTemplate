@@ -1,13 +1,14 @@
 using FluentValidation;
 using FluentValidation.AspNetCore;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using System.Reflection;
 using WebAppTemplate.Application;
 using WebAppTemplate.Application.Services.Abstraction;
 using WebAppTemplate.Infrastructure;
 using WebAppTemplate.Infrastructure.Authentication.Settings;
 using WebAppTemplate.Infrastructure.Implementation;
+using WebAppTemplate.Infrastructure.Persistance.Data;
+using WebAppTemplate.Infrastructure.Seeding;
 using WebAppTemplate.Presentation;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -67,6 +68,16 @@ builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssembly(presentationAssembly);
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    await context.Database.MigrateAsync();
+
+    var seeder = scope.ServiceProvider.GetRequiredService<IDataSeeder>();
+    await seeder.SeedAsync();
+}
+
 app.UseSwagger();
 app.UseSwaggerUI();
 // Configure the HTTP request pipeline.

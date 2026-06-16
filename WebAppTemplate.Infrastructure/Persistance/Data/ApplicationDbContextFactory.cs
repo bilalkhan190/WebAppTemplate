@@ -36,7 +36,11 @@ namespace WebAppTemplate.Infrastructure.Persistance.Data
                 new DbContextOptionsBuilder<ApplicationDbContext>();
 
             optionsBuilder.UseSqlServer(
-                configuration.GetConnectionString(ConnectionNames.Local));
+                configuration.GetConnectionString(ConnectionNames.Local),
+                sqlOptions => sqlOptions.EnableRetryOnFailure(
+                    maxRetryCount: 10,
+                    maxRetryDelay: TimeSpan.FromSeconds(10),
+                    errorNumbersToAdd: null));
 
             return new ApplicationDbContext(
                 optionsBuilder.Options);

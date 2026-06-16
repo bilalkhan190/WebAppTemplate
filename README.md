@@ -174,6 +174,20 @@ docker compose up --build -d
 
 Open Swagger: [http://localhost:5000/swagger](http://localhost:5000/swagger)
 
+### Default seeded credentials (development)
+
+After the first API start, the database seeder creates a default admin account:
+
+| Field | Value |
+|-------|-------|
+| Username | `admin` |
+| Password | `Admin@123` |
+| Role | `Administrator` |
+
+Use `POST /api/account/sign-in` to obtain a JWT, then call protected endpoints such as `GET /api/user/users`.
+
+> Development only. Change or disable default credentials before production deployment.
+
 ---
 
 ## API Endpoints
@@ -296,7 +310,7 @@ docker compose logs -f api
 
 Planned improvements for this template:
 
-- Database seed data (default roles and admin user)
+- Database seed data (default roles and admin user) ✅
 - Global exception handling middleware
 - Health check endpoint (`/health`)
 - Account APIs: logout, `/me`, change-password
