@@ -19,13 +19,7 @@ public class AccountController : ControllerBase
         _authService = authService;
     }
 
-    [HttpGet("get-user")]
-    public async Task<IActionResult> GetAll()
-    {
-        var result = await _userService.GetAllUsersAsync();
-        return result.ToActionResult();
-    }
-
+   
     [HttpPost("register")]
     public async Task<IActionResult> RegisterAsync([FromBody] RegisterUserRequest request)
     {
