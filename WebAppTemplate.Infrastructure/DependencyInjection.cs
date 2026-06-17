@@ -33,6 +33,10 @@ namespace WebAppTemplate.Infrastructure
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             })
+           
+
+
+
             .AddJwtBearer(options =>
             {
                 var jwtSettings = configuration
@@ -51,6 +55,7 @@ namespace WebAppTemplate.Infrastructure
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Secret))
                 };
             });
+          
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseSqlServer(
@@ -61,6 +66,9 @@ namespace WebAppTemplate.Infrastructure
                         errorNumbersToAdd: null));
             });
             services.AddHttpContextAccessor();
+            services.AddHealthChecks()
+          .AddSqlServer(
+              configuration.GetConnectionString(ConnectionNames.Local));
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ITokenRepository, TokenRepository>();

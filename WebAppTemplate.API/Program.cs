@@ -10,6 +10,7 @@ using WebAppTemplate.Infrastructure.Implementation;
 using WebAppTemplate.Infrastructure.Persistance.Data;
 using WebAppTemplate.Infrastructure.Seeding;
 using WebAppTemplate.Presentation;
+using WebAppTemplate.Presentation.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -80,6 +81,7 @@ using (var scope = app.Services.CreateScope())
 
 app.UseSwagger();
 app.UseSwaggerUI();
+app.UseGlobalExceptionMiddleware();
 // Configure the HTTP request pipeline.
 //if (app.Environment.IsDevelopment())
 //{
@@ -102,5 +104,5 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-
+app.MapHealthChecks("/health");
 app.Run();
