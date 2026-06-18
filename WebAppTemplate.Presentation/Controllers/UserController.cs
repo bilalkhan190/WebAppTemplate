@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebAppTemplate.Application.DTOs.Requests;
+using WebAppTemplate.Application.DTOs.Requests.GET;
 using WebAppTemplate.Application.Services.Abstraction;
 using WebAppTemplate.Presentation.Extensions;
 
@@ -34,9 +35,9 @@ public class UserController : ControllerBase
 
     [HttpGet("users")]
     [Authorize(Roles = "Administrator")]
-    public async Task<IActionResult> GetUsers()
+    public async Task<IActionResult> GetUsers([FromQuery] GetUserRequest request)
     {
-        var result = await _userService.GetAllUsersAsync();
+        var result = await _userService.GetAllUsersAsync(request);
         return result.ToActionResult();
     }
 }

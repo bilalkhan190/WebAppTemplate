@@ -29,6 +29,26 @@ namespace WebAppTemplate.Infrastructure.Implementation
             return _dbSet;
         }
 
+        public async Task<PaginatedList<TEntity>> GetPagedAsync(
+    int pageNumber,
+    int pageSize)
+        {
+            var query = Query();
+
+            var count = await query.CountAsync();
+
+            var items = await query
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return new PaginatedList<TEntity>(
+                items,
+                count,
+                pageNumber,
+                pageSize);
+        }
+
         public async Task<TEntity?> GetByIdAsync(Guid id)
         {
             return await _dbSet.FindAsync(id);

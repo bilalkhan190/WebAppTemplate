@@ -9,5 +9,6 @@ namespace WebAppTemplate.Domain.Abstraction
 {
     public interface IUserRepository : IRepository<User>
     {
+      
     }
 }

@@ -15,5 +15,12 @@ public class MapperConfig : Profile
         CreateMap<Role, RoleResponse>()
             .ForMember(dest => dest.RoleName, opt => opt.MapFrom(src => src.RoleName ?? string.Empty));
         CreateMap<UserRoles, UserRoleResponse>();
+        CreateMap<User, UserProfileResponse>()
+    .ForCtorParam(
+        nameof(UserProfileResponse.Roles),
+        opt => opt.MapFrom(
+            src => string.Join(",",
+                src.UserRoles.Select(x => x.Roles.RoleName))
+        ));
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using WebAppTemplate.Application.Common.Exceptions;
 using WebAppTemplate.Application.Common.Results;
 using WebAppTemplate.Application.DTOs.Requests;
 using WebAppTemplate.Application.DTOs.Responses;
@@ -103,5 +104,67 @@ public class AuthService : IAuthService
         await _unitOfWork.CompleteAsync();
 
         return ServiceResult<LoginResponse>.FromSuccess(newTokens);
+    }
+
+    public async Task<ServiceResult<string>> LogoutAsync(RefreshTokenRequest request)
+    {
+        var currentUser = _currentUserService.GetCurrentUser();
+        if (currentUser is null)
+        {
+            return ServiceResult<string>.FromFailure(
+                ["Unauthorized"],
+                ErrorType.Validation);
+        }
+
+        var existingToken = await _unitOfWork.RefreshToken
+            .Query()
+            .FirstOrDefaultAsync(x =>
+                x.Token == request.Token &&
+                x.UserId == currentUser.UserId &&
+                x.RevokedAt == null &&
+                x.ExpiresAt > DateTime.UtcNow);
+
+        if (existingToken is null)
+        {
+            return ServiceResult<string>.FromFailure(
+                ["Invalid or expired token"],
+                ErrorType.Validation);
+        }
+
+        await _unitOfWork.RefreshToken.RevokeAsync(request.Token);
+        await _unitOfWork.CompleteAsync();
+
+        return ServiceResult<string>.FromSuccess("Logged out successfully");
+    }
+
+    public async Task<ServiceResult<string>> ChangePasswordAsync(ChangePasswordRequest request)
+    {
+        var currentUser = _currentUserService.GetCurrentUser();
+        if (currentUser is null)
+        {
+            return ServiceResult<string>.FromFailure(
+                ["Unauthorized"],
+                ErrorType.Validation);
+        }
+
+        var user = await _unitOfWork.Users.GetByIdAsync(currentUser.UserId);
+        if (user is null)
+            throw new NotFoundException("user not found");
+
+        var isValidPassword = _passwordManager.VerifyPassword(
+            request.CurrentPassword,
+            user.Password);
+
+        if (!isValidPassword)
+        {
+            return ServiceResult<string>.FromFailure(
+                ["Current password is incorrect"],
+                ErrorType.Validation);
+        }
+
+        user.Password = _passwordManager.HashPassword(request.NewPassword);
+        await _unitOfWork.CompleteAsync();
+
+        return ServiceResult<string>.FromSuccess("Password changed successfully");
     }
 }

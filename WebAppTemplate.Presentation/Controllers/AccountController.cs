@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using WebAppTemplate.Application.DTOs.Requests;
 using WebAppTemplate.Application.DTOs.Responses;
 using WebAppTemplate.Application.Services.Abstraction;
@@ -27,6 +28,14 @@ public class AccountController : ControllerBase
         return result.ToActionResult();
     }
 
+    [HttpGet("me")]
+    [Authorize(Roles = "Administrator")]
+    public async Task<IActionResult> GetUserProfile()
+    {
+        var result = await _userService.GetUserProfileAsync();
+        return result.ToActionResult<UserProfileResponse>();
+    }
+
     [HttpPost("sign-in")]
     public async Task<IActionResult> SignIn([FromBody] LoginRequest request)
     {
@@ -34,10 +43,29 @@ public class AccountController : ControllerBase
         return result.ToActionResult();
     }
 
+
+    
+
     [HttpPost("refresh-token")]
     public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequest request)
     {
         var result = await _authService.GetNewRefreshToken(request);
+        return result.ToActionResult();
+    }
+
+    [HttpPost("logout")]
+    [Authorize]
+    public async Task<IActionResult> Logout([FromBody] RefreshTokenRequest request)
+    {
+        var result = await _authService.LogoutAsync(request);
+        return result.ToActionResult();
+    }
+
+    [HttpPost("change-password")]
+    [Authorize]
+    public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest request)
+    {
+        var result = await _authService.ChangePasswordAsync(request);
         return result.ToActionResult();
     }
 }

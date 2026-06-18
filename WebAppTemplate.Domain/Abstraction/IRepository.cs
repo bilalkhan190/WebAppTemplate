@@ -31,5 +31,9 @@ namespace WebAppTemplate.Domain.Abstraction
         void Remove(TEntity entity);
 
         void RemoveRange(IEnumerable<TEntity> entities);
+
+        Task<PaginatedList<TEntity>> GetPagedAsync(
+    int pageNumber,
+    int pageSize);
     }
 }
