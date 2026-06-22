@@ -75,6 +75,8 @@ namespace WebAppTemplate.Infrastructure
             services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
             services.AddScoped<ICurrentUserService, CurrentUserService>();
             services.AddScoped<IUserRoleRepository, UserRoleRepository>();
+            services.AddScoped<IPermissionRepository, PermissionRepository>();
+            services.AddScoped<IUserRolePermissionRepository, RolePermissionRepository>();
             services.AddScoped<IDataSeeder, DataSeeder>();
             return services;
         }

@@ -29,7 +29,7 @@ public class AccountController : ControllerBase
     }
 
     [HttpGet("me")]
-    [Authorize(Roles = "Administrator")]
+    [Authorize]
     public async Task<IActionResult> GetUserProfile()
     {
         var result = await _userService.GetUserProfileAsync();

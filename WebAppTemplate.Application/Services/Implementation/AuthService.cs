@@ -47,7 +47,7 @@ public class AuthService : IAuthService
 
         await _unitOfWork.RefreshToken.AddAsync(new RefreshToken
         {
-            UserId = user.Id,
+            UserId = user.UserId,
             Token = refreshToken,
             ExpiresAt = expiresAt,
         });

@@ -10,10 +10,12 @@ namespace WebAppTemplate.Domain.Entities
     public class Role : BaseEntity
     {
         [Key]
-        public Guid Id { get; set; } = Guid.NewGuid();  
+        public Guid RoleId { get; set; } 
         public string? RoleName { get; set; }
 
         public virtual ICollection<UserRoles> UserRoles { get; set; }
+        public virtual ICollection<RolePermission> RolePermissions { get; set; }
+       = new List<RolePermission>();
 
     }
 }

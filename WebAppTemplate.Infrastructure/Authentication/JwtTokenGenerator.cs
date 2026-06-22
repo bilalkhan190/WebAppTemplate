@@ -32,7 +32,7 @@ namespace WebAppTemplate.Infrastructure.Authentication
         {
             new Claim(
                 ClaimTypes.NameIdentifier,
-                user.Id.ToString()),
+                user.UserId.ToString()),
 
             new Claim(
                 ClaimTypes.Name,

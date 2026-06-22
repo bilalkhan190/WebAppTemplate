@@ -19,5 +19,7 @@ namespace WebAppTemplate.Domain.Abstraction
         ITokenRepository RefreshToken { get; }
         IUserRoleRepository UserRoles { get; }
         IRepository<Role> Roles { get; }
+        IUserRolePermissionRepository RolePermissions { get; }
+        IRepository<Permission> Permissions { get; }
     }
 }

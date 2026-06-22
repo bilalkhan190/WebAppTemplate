@@ -11,16 +11,31 @@ public class MapperConfig : Profile
     {
         CreateMap<RegisterUserRequest, User>();
         CreateMap<CreateRoleRequest, Role>();
-        CreateMap<User, UserResponse>();
-        CreateMap<Role, RoleResponse>()
-            .ForMember(dest => dest.RoleName, opt => opt.MapFrom(src => src.RoleName ?? string.Empty));
-        CreateMap<UserRoles, UserRoleResponse>();
-        CreateMap<User, UserProfileResponse>()
-    .ForCtorParam(
-        nameof(UserProfileResponse.Roles),
-        opt => opt.MapFrom(
-            src => string.Join(",",
-                src.UserRoles.Select(x => x.Roles.RoleName))
-        ));
+        CreateMap<CreatePermissionRequest, Permission>().ConstructUsing(p => new Permission
+        {
+            Code = p.permissionCode,
+            Name = p.permissionName,
+        });
+        CreateMap<CreateRolePermissionRequest, List<RolePermission>>()
+                                 .ConvertUsing(src =>
+                                     src.PermissionId.Select(permissionId => new RolePermission
+                                     {
+                                         RoleId = src.RoleId,
+                                         PermissionId = permissionId
+                                     }).ToList());
+                                CreateMap<User, UserResponse>();
+                                CreateMap<Role, RoleResponse>()
+                                    .ForMember(dest => dest.RoleName, opt => opt.MapFrom(src => src.RoleName ?? string.Empty));
+                                CreateMap<UserRoles, UserRoleResponse>();
+                                CreateMap<User, UserProfileResponse>()
+                                .ConvertUsing(user => new UserProfileResponse(
+                                    user.UserId,
+                                    user.FirstName,
+                                    user.LastName,
+                                    user.Username,
+                                    user.Email,
+                                    user.Phone,
+                                    user.CreatedAt,
+                                    string.Join(",", user.UserRoles.Select(ur => ur.Roles.RoleName))));
     }
 }

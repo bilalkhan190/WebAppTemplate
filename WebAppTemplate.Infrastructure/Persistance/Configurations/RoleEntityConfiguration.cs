@@ -14,17 +14,25 @@ namespace WebAppTemplate.Infrastructure.Persistance.Configurations
         public void Configure(EntityTypeBuilder<Role> builder)
         {
             builder.ToTable("Roles");
-            builder.HasKey(x => x.Id);
+            builder.HasKey(x => x.RoleId);
             builder.Property(x => x.RoleName)
                 .IsRequired()
                 .HasMaxLength(150);
-            builder.Property(x => x.Id)
+            builder.HasIndex(x => x.RoleName)
+                                .IsUnique();
+            builder.Property(x => x.RoleId)
        .HasDefaultValueSql("NEWID()");
 
             builder.HasMany<UserRoles>()
                 .WithOne(x => x.Roles)
                 .HasForeignKey(x => x.RoleId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasMany(x => x.RolePermissions)
+                .WithOne(x => x.Role)
+                .HasForeignKey(x => x.RoleId)
+                .OnDelete(DeleteBehavior.Cascade);
+
         }
     }
 }

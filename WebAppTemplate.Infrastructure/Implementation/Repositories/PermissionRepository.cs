@@ -5,14 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using WebAppTemplate.Domain.Abstraction;
 using WebAppTemplate.Domain.Entities;
-using WebAppTemplate.Domain.Shared.Enums;
 using WebAppTemplate.Infrastructure.Persistance.Data;
 
 namespace WebAppTemplate.Infrastructure.Implementation.Repositories
 {
-    internal class UserRepository : Repository<User>, IUserRepository
+    internal sealed class PermissionRepository : Repository<Permission> , IPermissionRepository
     {
-        public UserRepository(ApplicationDbContext context) : base(context) { }
-       
+      
+        public PermissionRepository(ApplicationDbContext context) : base(context) { }
     }
 }

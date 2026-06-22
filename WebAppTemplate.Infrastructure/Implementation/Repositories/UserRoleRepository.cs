@@ -9,7 +9,7 @@ using WebAppTemplate.Infrastructure.Persistance.Data;
 
 namespace WebAppTemplate.Infrastructure.Implementation.Repositories
 {
-    public class UserRoleRepository : Repository<UserRoles> , IUserRoleRepository
+    internal class UserRoleRepository : Repository<UserRoles> , IUserRoleRepository
     {
         
         public UserRoleRepository(ApplicationDbContext context) : base(context) { }

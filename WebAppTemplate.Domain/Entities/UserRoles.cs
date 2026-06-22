@@ -8,7 +8,7 @@ namespace WebAppTemplate.Domain.Entities
 {
     public class UserRoles : BaseEntity
     {
-        public Guid Id { get; set; } = Guid.NewGuid();
+        public Guid UserRoleId { get; set; } = Guid.NewGuid();
         public Guid UserId { get; set; } 
         public Guid RoleId { get; set; } 
 

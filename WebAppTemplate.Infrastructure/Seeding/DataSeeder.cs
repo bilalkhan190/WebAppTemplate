@@ -87,7 +87,7 @@ public class DataSeeder : IDataSeeder
         }
 
         var assignmentExists = await _context.UserRoles
-            .AnyAsync(ur => ur.UserId == adminUser.Id && ur.RoleId == administratorRole.Id);
+            .AnyAsync(ur => ur.UserId == adminUser.UserId && ur.RoleId == administratorRole.RoleId);
 
         if (assignmentExists)
         {
@@ -96,8 +96,8 @@ public class DataSeeder : IDataSeeder
 
         var userRole = new UserRoles
         {
-            UserId = adminUser.Id,
-            RoleId = administratorRole.Id
+            UserId = adminUser.UserId,
+            RoleId = administratorRole.RoleId
         };
 
         userRole.SetCreatedDefaults(null);

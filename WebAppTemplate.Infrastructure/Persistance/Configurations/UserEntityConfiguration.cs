@@ -14,7 +14,7 @@ namespace WebAppTemplate.Infrastructure.Persistance.Configurations
         public void Configure(EntityTypeBuilder<User> builder)
         {
             builder.ToTable("Users");
-            builder.HasKey(u => u.Id);
+            builder.HasKey(u => u.UserId);
 
             builder.Property(u => u.FirstName)
                 .IsRequired()

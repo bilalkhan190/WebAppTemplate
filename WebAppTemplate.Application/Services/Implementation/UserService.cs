@@ -64,10 +64,14 @@ public class UserService : IUserService
 
     public async Task<ServiceResult<UserProfileResponse>> GetUserProfileAsync()
     {
+        var currentUser = _currentUserService.GetCurrentUser();
+        if (currentUser is null)
+            throw new NotFoundException("User not exist");
+
         var user = await _unitOfWork.Users.Query()
                                          .Include(x => x.UserRoles)
                                              .ThenInclude(x => x.Roles)
-                                         .FirstOrDefaultAsync();
+                                         .FirstOrDefaultAsync(x => x.UserId == currentUser.UserId);
         if (user is null)
             throw new NotFoundException($"User not exist");
         var response = _mapper.Map<UserProfileResponse>(user);
