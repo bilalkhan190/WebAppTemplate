@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WebAppTemplate Admin</title>
+  <style>
+    :root { font-family: system-ui, sans-serif; color: #1f2937; background: #f8fafc; }
+    body { max-width: 960px; margin: 2rem auto; padding: 0 1rem; }
+    h1 { margin-bottom: 0.25rem; }
+    .card { background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 1rem 1.25rem; margin-top: 1rem; }
+    label { display: block; font-size: 0.875rem; margin-top: 0.75rem; }
+    input { width: 100%; padding: 0.5rem; margin-top: 0.25rem; border: 1px solid #d1d5db; border-radius: 8px; }
+    button { margin-top: 1rem; padding: 0.6rem 1rem; border: 0; border-radius: 8px; background: #2563eb; color: #fff; cursor: pointer; }
+    pre { background: #0f172a; color: #e2e8f0; padding: 1rem; border-radius: 8px; overflow: auto; }
+    .muted { color: #64748b; font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+  <h1>WebAppTemplate Admin</h1>
+  <p class="muted">Minimal demo UI for sign-in and listing users via the REST API.</p>
+
+  <div class="card">
+    <h2>Sign in</h2>
+    <label>Username<input id="username" value="admin" /></label>
+    <label>Password<input id="password" type="password" value="Admin@123" /></label>
+    <button id="signInBtn">Sign in</button>
+  </div>
+
+  <div class="card">
+    <h2>Users</h2>
+    <button id="loadUsersBtn">Load users (Administrator)</button>
+    <pre id="output">Sign in first, then load users.</pre>
+  </div>
+
+  <script>
+    let accessToken = '';
+
+    async function signIn() {
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      const response = await fetch('/api/Account/sign-in', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      });
+      const payload = await response.json();
+      if (!payload.success) {
+        document.getElementById('output').textContent = JSON.stringify(payload, null, 2);
+        return;
+      }
+      accessToken = payload.data.accessToken;
+      document.getElementById('output').textContent = 'Signed in. Token stored in memory.';
+    }
+
+    async function loadUsers() {
+      const response = await fetch('/api/User/users?pageNumber=1&pageSize=10', {
+        headers: { Authorization: `Bearer ${accessToken}` }
+      });
+      const payload = await response.json();
+      document.getElementById('output').textContent = JSON.stringify(payload, null, 2);
+    }
+
+    document.getElementById('signInBtn').addEventListener('click', signIn);
+    document.getElementById('loadUsersBtn').addEventListener('click', loadUsers);
+  </script>
+</body>
+</html>

@@ -11,8 +11,8 @@ namespace WebAppTemplate.Application.Services.Abstraction
 {
     public interface IPermissionService
     {
-        public Task<ServiceResult<PermissionResponse>> CreateAsync(CreatePermissionRequest request);
-        public Task<ServiceResult<CreateRolePermissionResponse>> CreateRolePermissionsAsync(CreateRolePermissionRequest request);
-       
+        Task<ServiceResult<PermissionResponse>> CreateAsync(CreatePermissionRequest request);
+        Task<ServiceResult<CreateRolePermissionResponse>> CreateRolePermissionsAsync(CreateRolePermissionRequest request);
+        Task<ServiceResult<IEnumerable<PermissionResponse>>> GetAllAsync();
     }
 }

@@ -1,56 +1,50 @@
-﻿using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Hosting;
 using System.Text.Json;
-using System.Threading.Tasks;
 using WebAppTemplate.Application.Common.Exceptions;
 using WebAppTemplate.Application.DTOs;
-using WebAppTemplate.Application.Extensions;
 
-namespace WebAppTemplate.Presentation.Middlewares
+namespace WebAppTemplate.Presentation.Middlewares;
+
+public sealed class GlobalExceptionMiddleware
 {
-    public sealed class GlobalExceptionMiddleware
+    private readonly RequestDelegate _next;
+    private readonly IWebHostEnvironment _environment;
+
+    public GlobalExceptionMiddleware(RequestDelegate next, IWebHostEnvironment environment)
     {
-        private readonly RequestDelegate _next;
+        _next = next;
+        _environment = environment;
+    }
 
-        public GlobalExceptionMiddleware(RequestDelegate next)
+    public async Task InvokeAsync(HttpContext context)
+    {
+        try
         {
-            _next = next;
+            await _next(context);
         }
-
-        public async Task InvokeAsync(HttpContext context)
+        catch (Exception ex)
         {
-            try
+            var statusCode = ex switch
             {
-               
-                await _next(context);
-            }
-            catch (Exception ex)
-            {
-                var statusCode = ex switch
-                {
-                    NotFoundException => StatusCodes.Status404NotFound,
-                    ConflictException => StatusCodes.Status409Conflict,
-                    BusinessException => StatusCodes.Status400BadRequest,
-                    ForbiddenException => StatusCodes.Status403Forbidden,
-                    _ => StatusCodes.Status500InternalServerError
-                };
+                NotFoundException => StatusCodes.Status404NotFound,
+                ConflictException => StatusCodes.Status409Conflict,
+                BusinessException => StatusCodes.Status400BadRequest,
+                ForbiddenException => StatusCodes.Status403Forbidden,
+                _ => StatusCodes.Status500InternalServerError
+            };
 
-                context.Response.StatusCode = statusCode;
-                context.Response.ContentType = "application/json";
+            var message = statusCode == StatusCodes.Status500InternalServerError &&
+                          !string.Equals(_environment.EnvironmentName, Environments.Development, StringComparison.OrdinalIgnoreCase)
+                ? "An unexpected error occurred."
+                : ex.Message;
 
-                var response = new ApiResponse<object>(
-                    false,
-                    ex.Message,
-                    null);
-                var json = JsonSerializer.Serialize(response);
+            context.Response.StatusCode = statusCode;
+            context.Response.ContentType = "application/json";
 
-                context.Response.ContentType = "application/json";
-
-                await context.Response.WriteAsync(json);
-            }
+            var response = new ApiResponse<object>(false, message, null);
+            await context.Response.WriteAsync(JsonSerializer.Serialize(response));
         }
     }
 }

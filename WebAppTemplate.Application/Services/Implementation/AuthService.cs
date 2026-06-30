@@ -64,6 +64,8 @@ public class AuthService : IAuthService
             .Query()
             .Include(x => x.UserRoles)
             .ThenInclude(x => x.Roles)
+                .ThenInclude(r => r.RolePermissions)
+                    .ThenInclude(rp => rp.Permission)
             .FirstOrDefaultAsync(x => x.Username == request.Username);
 
         if (user is null)

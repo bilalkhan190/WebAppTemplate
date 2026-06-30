@@ -10,7 +10,10 @@ services:
 
     environment:
       ASPNETCORE_ENVIRONMENT: Development
-      ConnectionStrings__myConn: "Server=sqlserver,1433;Database=TestTemplateDb;User Id=sa;Password=Matech321@;TrustServerCertificate=True;"
+      ConnectionStrings__myConn: "Server=sqlserver,1433;Database=WebAppTemplateDb;User Id=sa;Password=${MSSQL_SA_PASSWORD};TrustServerCertificate=True;"
+
+    env_file:
+      - .env
 
     depends_on:
       sqlserver:
@@ -21,10 +24,13 @@ services:
 
     environment:
       ACCEPT_EULA: "Y"
-      MSSQL_SA_PASSWORD: "Matech321@"
+      MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD}
 
     ports:
       - "1433:1433"
+
+    volumes:
+      - sqldata:/var/opt/mssql
 
     healthcheck:
       test: ["CMD-SHELL", "grep -q 'SQL Server is now ready for client connections' /var/opt/mssql/log/errorlog || exit 1"]
@@ -32,3 +38,6 @@ services:
       timeout: 5s
       retries: 24
       start_period: 30s
+
+volumes:
+  sqldata:

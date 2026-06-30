@@ -372,7 +372,9 @@ FodyWeavers.xsd
 !**/appsettings.example.json
 !**/appsettings.example.*.json
 !**/appsettings.Test.json
+!**/appsettings.Testing.json
 
 # Local env files
 .env
 .env.*
+!.env.example

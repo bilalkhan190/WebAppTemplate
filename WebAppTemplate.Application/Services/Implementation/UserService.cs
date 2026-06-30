@@ -101,8 +101,81 @@ public class UserService : IUserService
                                      request.PageNumber,
                                      request.PageSize);
 
-                                    return ServiceResult<PaginatedList<UserResponse>>
-                                        .FromSuccess(users);
+        return ServiceResult<PaginatedList<UserResponse>>
+            .FromSuccess(users);
+    }
+
+    public async Task<ServiceResult<UserResponse>> GetUserByIdAsync(Guid userId)
+    {
+        var user = await _unitOfWork.Users
+            .Query()
+            .FirstOrDefaultAsync(x => x.UserId == userId && x.Active == Status.Active);
+
+        if (user is null)
+        {
+            return ServiceResult<UserResponse>.FromFailure(
+                ["User not found"],
+                ErrorType.NotFound);
+        }
+
+        return ServiceResult<UserResponse>.FromSuccess(_mapper.Map<UserResponse>(user));
+    }
+
+    public async Task<ServiceResult<UserResponse>> UpdateUserAsync(Guid userId, UpdateUserRequest request)
+    {
+        var user = await _unitOfWork.Users
+            .Query()
+            .FirstOrDefaultAsync(x => x.UserId == userId && x.Active == Status.Active);
+
+        if (user is null)
+        {
+            return ServiceResult<UserResponse>.FromFailure(
+                ["User not found"],
+                ErrorType.NotFound);
+        }
+
+        user.FirstName = request.FirstName;
+        user.LastName = request.LastName;
+        user.Email = request.Email;
+        user.Phone = request.Phone;
+
+        _unitOfWork.Users.Update(user);
+        await _unitOfWork.CompleteAsync();
+
+        return ServiceResult<UserResponse>.FromSuccess(_mapper.Map<UserResponse>(user));
+    }
+
+    public async Task<ServiceResult<string>> DeleteUserAsync(Guid userId)
+    {
+        var user = await _unitOfWork.Users
+            .Query()
+            .FirstOrDefaultAsync(x => x.UserId == userId && x.Active == Status.Active);
+
+        if (user is null)
+        {
+            return ServiceResult<string>.FromFailure(
+                ["User not found"],
+                ErrorType.NotFound);
+        }
+
+        var currentUserId = _currentUserObject?.UserId ?? Guid.Empty;
+        user.SetDeletedDefaults(currentUserId);
+        user.Active = Status.InActive;
+
+        _unitOfWork.Users.Update(user);
+        await _unitOfWork.CompleteAsync();
+
+        return ServiceResult<string>.FromSuccess("User deleted successfully");
+    }
+
+    public async Task<ServiceResult<IEnumerable<RoleResponse>>> GetAllRolesAsync()
+    {
+        var roles = await _unitOfWork.Roles
+            .Query()
+            .Where(x => x.Active == Status.Active)
+            .ToListAsync();
+
+        return ServiceResult<IEnumerable<RoleResponse>>.FromSuccess(_mapper.Map<IEnumerable<RoleResponse>>(roles));
     }
 
     public async Task<ServiceResult<UserResponse>> RegisterUserAsync(RegisterUserRequest request)

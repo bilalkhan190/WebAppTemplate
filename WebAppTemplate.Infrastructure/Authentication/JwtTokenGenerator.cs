@@ -44,12 +44,21 @@ namespace WebAppTemplate.Infrastructure.Authentication
         };
             if (user.UserRoles.Count > 0)
             {
-                foreach (var role in user.UserRoles)
+                foreach (var userRole in user.UserRoles)
                 {
                     claims.Add(
                         new Claim(
                             ClaimTypes.Role,
-                            role.Roles.RoleName));
+                            userRole.Roles.RoleName));
+
+                    foreach (var rolePermission in userRole.Roles.RolePermissions)
+                    {
+                        if (rolePermission.Active == Domain.Shared.Enums.Status.Active &&
+                            rolePermission.Permission is not null)
+                        {
+                            claims.Add(new Claim("permission", rolePermission.Permission.Code));
+                        }
+                    }
                 }
             }
            

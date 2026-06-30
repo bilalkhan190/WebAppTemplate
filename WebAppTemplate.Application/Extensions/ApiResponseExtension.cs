@@ -12,7 +12,7 @@ namespace WebAppTemplate.Application.Extensions
     {
         public static IActionResult Success<T>(T data = default)
         {
-            var response = new ApiResponse<T>(true, "Opeation Successfull", data);
+            var response = new ApiResponse<T>(true, "Operation Successful", data);
             return new OkObjectResult(response);
         }
 

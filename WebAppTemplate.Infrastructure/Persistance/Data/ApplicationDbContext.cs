@@ -31,6 +31,8 @@ namespace WebAppTemplate.Infrastructure.Persistance.Data
         public virtual DbSet<Role> Roles { get; set; }  
         public virtual DbSet<UserRoles> UserRoles { get; set; }  
         public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
+        public virtual DbSet<Permission> Permissions { get; set; }
+        public virtual DbSet<RolePermission> RolePermissions { get; set; }
 
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

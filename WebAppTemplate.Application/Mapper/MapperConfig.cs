@@ -23,8 +23,10 @@ public class MapperConfig : Profile
                                          RoleId = src.RoleId,
                                          PermissionId = permissionId
                                      }).ToList());
-                                CreateMap<User, UserResponse>();
+                                CreateMap<User, UserResponse>()
+                                    .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.UserId));
                                 CreateMap<Role, RoleResponse>()
+                                    .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.RoleId))
                                     .ForMember(dest => dest.RoleName, opt => opt.MapFrom(src => src.RoleName ?? string.Empty));
                                 CreateMap<UserRoles, UserRoleResponse>();
                                 CreateMap<User, UserProfileResponse>()

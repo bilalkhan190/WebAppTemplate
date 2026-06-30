@@ -1,10 +1,5 @@
 ﻿using AutoMapper;
-using AutoMapper.Execution;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using WebAppTemplate.Application.Common.Results;
 using WebAppTemplate.Application.DTOs.Requests;
 using WebAppTemplate.Application.DTOs.Responses;
@@ -66,6 +61,25 @@ namespace WebAppTemplate.Application.Services.Implementation
                              );
 
             return ServiceResult<CreateRolePermissionResponse>.FromSuccess(response);
+        }
+
+        public async Task<ServiceResult<IEnumerable<PermissionResponse>>> GetAllAsync()
+        {
+            var permissions = await _unitOfWork.Permissions
+                .Query()
+                .Where(x => x.Active == Status.Active)
+                .OrderBy(x => x.Name)
+                .ToListAsync();
+
+            var response = permissions.Select(permission => new PermissionResponse(
+                permission.PermissionId,
+                permission.Name,
+                permission.Code,
+                permission.CreatedAt.ToString("dd/MM/yyyy"),
+                _userObject?.Username ?? "system",
+                permission.Active.ToString()));
+
+            return ServiceResult<IEnumerable<PermissionResponse>>.FromSuccess(response);
         }
     }
 }

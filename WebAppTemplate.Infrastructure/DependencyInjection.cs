@@ -1,14 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using WebAppTemplate.Application.Common.Results;
 using WebAppTemplate.Application.Services.Abstraction;
 using WebAppTemplate.Domain.Abstraction;
@@ -25,7 +23,10 @@ namespace WebAppTemplate.Infrastructure
 {
     public static class DependencyInjection
     {
-        public static IServiceCollection AddInfrastructureLayer(this IServiceCollection services , IConfigurationManager configuration)
+        public static IServiceCollection AddInfrastructureLayer(
+            this IServiceCollection services,
+            IConfigurationManager configuration,
+            IHostEnvironment environment)
         {
             services.Configure<JWTSettings>(configuration.GetSection("JwtSettings"));
             services.AddAuthentication(options =>
@@ -66,9 +67,14 @@ namespace WebAppTemplate.Infrastructure
                         errorNumbersToAdd: null));
             });
             services.AddHttpContextAccessor();
-            services.AddHealthChecks()
-          .AddSqlServer(
-              configuration.GetConnectionString(ConnectionNames.Local));
+
+            var healthChecks = services.AddHealthChecks();
+            if (!environment.IsEnvironment("Testing"))
+            {
+                healthChecks.AddSqlServer(
+                    configuration.GetConnectionString(ConnectionNames.Local)!);
+            }
+
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ITokenRepository, TokenRepository>();
