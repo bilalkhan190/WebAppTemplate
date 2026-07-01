@@ -302,6 +302,88 @@ Copy `.env.example` to `.env` before starting Docker. Never commit `.env`.
 
 ---
 
+## GitHub Showcase — Repository Setup
+
+Repo code-wise showcase-ready hai. GitHub par ye settings configure karo taake profile/recruiters ke liye professional lage.
+
+### 1. Push latest code
+
+```bash
+git push origin main
+```
+
+> Local `main` par latest commit ho to pehle push karo — CI badge tabhi green dikhega.
+
+### 2. Repository visibility
+
+| Setting | Value |
+|---------|-------|
+| **Visibility** | **Public** (portfolio ke liye zaroori) |
+
+GitHub → repo → **Settings** → **General** → Danger Zone → *Change visibility* → Public
+
+### 3. About section (repo homepage par dikhta hai)
+
+Repo page par **⚙️ About** (right side) → **Edit**:
+
+| Field | Suggested value |
+|-------|-----------------|
+| **Description** | Production-ready ASP.NET Core 8 Web API template — Clean Architecture, JWT, RBAC, EF Core, Docker |
+| **Website** | (optional) LinkedIn ya portfolio URL |
+| **Topics** | `aspnet-core`, `clean-architecture`, `jwt-authentication`, `dotnet8`, `web-api`, `entity-framework-core`, `minimal-api`, `docker`, `csharp`, `template` |
+
+### 4. Template repository (recommended)
+
+**Settings** → **General** → **Template repository** → ✅ **Enable**
+
+Is se doosre log *Use this template* se naya repo bana sakte hain — template projects ke liye standard practice hai.
+
+### 5. Default branch
+
+**Settings** → **General** → **Default branch** → `main`
+
+### 6. Actions / CI
+
+**Settings** → **Actions** → **General** → *Workflow permissions*:
+
+- ✅ Read and write permissions (default theek hai)
+- Actions enabled hon
+
+Push ke baad **Actions** tab check karo — CI green hona chahiye.
+
+### 7. Social preview (optional but strong)
+
+**Settings** → scroll to **Social preview** → image upload karo (1280×640):
+
+- Swagger screenshot, ya architecture diagram
+- Recruiters ko link share karte waqt professional card dikhega
+
+### 8. Pin repository (profile par)
+
+Apne GitHub profile → **Customize your pins** → `WebAppTemplate` pin karo.
+
+### 9. Profile README (optional)
+
+Agar `bilalkhan190/bilalkhan190` profile README hai to usme is repo ka link + 1 line description add karo.
+
+### Showcase readiness checklist
+
+| Item | Status |
+|------|--------|
+| README with badges, setup, endpoints | ✅ |
+| LICENSE (MIT) | ✅ |
+| CONTRIBUTING.md | ✅ |
+| `.github/workflows/ci.yml` | ✅ |
+| Unit + integration tests | ✅ |
+| `appsettings.example.json` (no secrets in git) | ✅ |
+| Docker `.env.example` | ✅ |
+| Swagger + `/admin` demo | ✅ |
+| Social preview image | ⬜ optional |
+| Template repository enabled | ⬜ manual |
+| Repo pinned on profile | ⬜ manual |
+
+---
+
 ## Roadmap
 
 See [`docs/TASKS.md`](docs/TASKS.md) for the full checklist. Optional next steps:
@@ -329,4 +411,5 @@ MIT — see [LICENSE](LICENSE).
 
 **Bilal Khan**
 
-If this template helped you, consider giving the repo a star on GitHub.
+- Repository: [github.com/bilalkhan190/WebAppTemplate](https://github.com/bilalkhan190/WebAppTemplate)
+- If this template helped you, consider giving the repo a **star** on GitHub.
